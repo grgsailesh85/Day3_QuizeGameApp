@@ -1,3 +1,4 @@
+//'questions' holds multiple objects, each representing q question, each question object contains the question text and an array of answer objects. Each answer object contains the answer text and a propert 'correct' indicating wheather the answer is correct('true') or incorrect('false')  
 const questions = [
   {
     question : "Which is the largest animal in the world?",
@@ -36,13 +37,20 @@ const questions = [
     ]
   },
 ];
+
+
+
+//'questionElement' , 'answerButtons' and 'nextButton' variable store references to HTML elements where questions , answer buttons and "Next" button will be displayed respectively
 const questionElement = document.getElementById("question");
 const answerButtons = document.getElementById("answer-button");
 const nextButton = document.getElementById("next-btn");
  
+
 let currentQuestionIndex = 0;
 let score = 0;
 
+
+//this function is called when the quize starts or when the user chooses to restart the quize 
 function startQuize(){
   //keeps track of the index of the current question being displayed in the quize.
   currentQuestionIndex = 0;
@@ -53,6 +61,13 @@ function startQuize(){
   showQuestion();
 }
 
+
+
+//resetState() function reset the quize state
+//selects the current question object from the 'questions' array based on the 'currentQuestionIndex'
+//updates the 'questionElemsnt' with the current question text
+//iterates over the answer for the current question, creates answer button for each answer and appends them to the 'answerButtons' elements
+//if an answer is correct, it sets a custom data attribute ('correct') on the button
 function showQuestion(){
   resetState();
   let currentQuestion = questions[currentQuestionIndex];
@@ -76,6 +91,8 @@ function showQuestion(){
   });
 }
 
+
+//resets the state of the quize, hides the next button('nextButton') and removes all the child elements (answer buttons) from the 'answerButtons' elements
 function resetState(){
   //hides the "Next" button by setting its 'diplay' CSS property to 'none'
   nextButton.style.display = "none";
@@ -84,6 +101,14 @@ function resetState(){
     answerButtons.removeChild(answerButtons.firstChild);
   }
 }
+
+
+
+
+//this function is called when a user selects an answer by clicking on an answer button
+//it checks if the selected answer is correct based on the custom data attribute 'correct' of the button.
+//it adds CSS classes('correct' or 'incorrrect') to the selected button to indicate correctness
+//it disables all answer buttons and display the "Next" button
  function selectAnswer(e){
   const selectedBtn = e.target;
   const isCorrect = selectedBtn.dataset.correct === "true";
@@ -101,6 +126,11 @@ function resetState(){
   });
   nextButton.style.display = "block";
  }
+
+
+
+ //called to display the users score after completing the quize
+ //resets the quize state, updates the "questionElement" with the users score and changes the text of the "Next" button to "Play Again".
  function showScore(){
   resetState();
   questionElement.innerHTML = `You Score ${score} out of ${questions.length}!`;
@@ -110,6 +140,8 @@ function resetState(){
 
 
 
+ // this function is called when the next button is clicked 
+ //it increments the 'currentQuestionIndex' to move to the next question
  function handleNextButton(){
   currentQuestionIndex++;
   if(currentQuestionIndex< questions.length){
@@ -121,8 +153,9 @@ function resetState(){
 
 
 
-
-
+ //adds an event listener to the next button
+ //when the next button is clicked, it checks if there are more questions remaining
+ //if there are more question it calls handleNextButton(), otherwise it calls 'startQuize()' to restart the quize
  nextButton.addEventListener("click",() =>{
   if(currentQuestionIndex < questions.length){
     handleNextButton();
@@ -131,4 +164,5 @@ function resetState(){
   }
  });
 
+ //startQuize() function is called initially to start the quize when the page loads
  startQuize();
